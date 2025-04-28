@@ -54,13 +54,13 @@ Main functionalities include:
 ## 📸 Project Images
 
 ### Login Screen
-![Login Screen](images/login.png)
+![Login Screen](https://github.com/Jaqz23/Internet-Banking-Application/blob/c2b7545d7ba60fd4c0925273cf312602552e0ef4/images/login.png)
 
 ### Admin Dashboard
-![Admin Dashboard](images/admin-dashboard.png)
+![Admin Dashboard](https://github.com/Jaqz23/Internet-Banking-Application/blob/c2b7545d7ba60fd4c0925273cf312602552e0ef4/images/admin%20home.png)
 
 ### Client Home (Product List)
-![Client Home](images/client-home.png)
+![Client Home](https://github.com/Jaqz23/Internet-Banking-Application/blob/c2b7545d7ba60fd4c0925273cf312602552e0ef4/images/client-home.png)
 
 ## 📋 Prerequisites
 
