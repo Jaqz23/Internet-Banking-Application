@@ -1,0 +1,95 @@
+﻿@model IB.Core.Application.ViewModels.Dashboard.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h1 class="fw-bold text-primary">📊 Panel de Administración</h1>
+            <hr class="w-50 mx-auto border-dark-subtle">
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
+        <!-- Total de Transacciones -->
+        <div class="col">
+            <div class="card shadow h-100 text-center border-primary">
+                <div class="card-body">
+                    <span class="fs-1 text-primary">💳</span>
+                    <h5 class="fw-bold mt-2 text-primary">@Model.TotalTransactionsMade</h5>
+                    <p class="text-muted">Total de transacciones</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transacciones últimas 24 horas -->
+        <div class="col">
+            <div class="card shadow h-100 text-center border-info">
+                <div class="card-body">
+                    <span class="fs-1 text-info">📅</span>
+                    <h5 class="fw-bold mt-2 text-info">@Model.TransactionsMadeLast24Hours</h5>
+                    <p class="text-muted">Transacciones últimas 24h</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagos Totales -->
+        <div class="col">
+            <div class="card shadow h-100 text-center border-success">
+                <div class="card-body">
+                    <span class="fs-1 text-success">💰</span>
+                    <h5 class="fw-bold mt-2 text-success">@Model.TotalPaymentsMade</h5>
+                    <p class="text-muted">Total de pagos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagos últimas 24 horas -->
+        <div class="col">
+            <div class="card shadow h-100 text-center border-warning">
+                <div class="card-body">
+                    <span class="fs-1 text-warning">⚡</span>
+                    <h5 class="fw-bold mt-2 text-warning">@Model.PaymentsMadeLast24Hours</h5>
+                    <p class="text-muted">Pagos en 24h</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
+        <!-- Usuarios Activos -->
+        <div class="col-md-4">
+            <div class="card shadow h-100 text-center border-success">
+                <div class="card-body">
+                    <span class="fs-1 text-success">✅</span>
+                    <h5 class="fw-bold mt-2 text-success">@Model.TotalActiveUsers</h5>
+                    <p class="text-muted">Usuarios activos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usuarios Inactivos -->
+        <div class="col-md-4">
+            <div class="card shadow h-100 text-center border-danger">
+                <div class="card-body">
+                    <span class="fs-1 text-danger">❌</span>
+                    <h5 class="fw-bold mt-2 text-danger">@Model.TotalInactiveUsers</h5>
+                    <p class="text-muted">Usuarios inactivos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos Asignados -->
+        <div class="col-md-4">
+            <div class="card shadow h-100 text-center border-primary">
+                <div class="card-body">
+                    <span class="fs-1 text-primary">📦</span>
+                    <h5 class="fw-bold mt-2 text-primary">@Model.TotalProductsCreated</h5>
+                    <p class="text-muted">Productos asignados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

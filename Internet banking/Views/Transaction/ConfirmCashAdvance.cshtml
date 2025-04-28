@@ -1,0 +1,37 @@
+﻿@using IB.Core.Application.ViewModels.Transaction
+@model ConfirmTransactionViewModel
+
+@{
+    ViewData["Title"] = "Confirmar Avance de Efectivo";
+}
+
+<div class="container mt-5 w-50">
+    <div class="card card-box-shadow">
+        <div class="card-header bg-white">
+            <h3>✅ Confirmar Avance de Efectivo</h3>
+        </div>
+        <div class="card-body">
+            <p class="fs-5 text-center">Revisa los detalles antes de confirmar.</p>
+
+            <ul class="list-group mb-3">
+                <li class="list-group-item"><strong>Tarjeta de Crédito:</strong> @Model.FromAccountNumber</li>
+                <li class="list-group-item"><strong>Cuenta de Ahorro:</strong> @Model.ToAccountNumber</li>
+                <li class="list-group-item"><strong>Monto del Avance:</strong> @string.Format("{0:C}", Model.Amount)</li>
+                <li class="list-group-item"><strong>Interés Aplicado (6.25%):</strong> @string.Format("{0:C}", Model.Amount * 0.0625m)</li>
+                <li class="list-group-item"><strong>Total a Deber:</strong> @string.Format("{0:C}", Model.Amount * 1.0625m)</li>
+            </ul>
+
+            <form method="post" asp-controller="Transaction" asp-action="ConfirmCashAdvance">
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="FromAccountNumber" />
+                <input type="hidden" asp-for="ToAccountNumber" />
+                <input type="hidden" asp-for="Amount" />
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">✅ Confirmar</button>
+                    <a class="btn btn-danger" asp-controller="Transaction" asp-action="CancelCashAdvance">❌ Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

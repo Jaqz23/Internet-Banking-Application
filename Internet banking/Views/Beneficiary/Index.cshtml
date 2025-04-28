@@ -1,0 +1,128 @@
+﻿@using IB.Core.Application.ViewModels.Beneficiary;
+@model List<BeneficiaryViewModel>
+
+@{
+    ViewData["Title"] = "Mis Beneficiarios";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-primary">👥 Mis Beneficiarios</h1>
+
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addBeneficiaryModal">
+        <i class="bi bi-person-plus-fill"></i> Agregar Beneficiario
+    </button>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="border rounded-3 shadow bg-white p-4">
+        <table class="table table-hover">
+            <thead class="fw-bold text-center">
+                <tr>
+                    <th>Nombre Completo</th>
+                    <th>Número de Cuenta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider text-center">
+                @foreach (var beneficiary in Model)
+                {
+                    <tr class="align-middle">
+                        <td>@beneficiary.FullName</td>
+                        <td>@beneficiary.AccountNumber</td>
+                        <td>
+                            <!-- Boton para abrir el modal de confirmacion -->
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal" data-id="@beneficiary.Id">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para agregar beneficiario -->
+<div class="modal fade" id="addBeneficiaryModal" tabindex="-1" aria-labelledby="addBeneficiaryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBeneficiaryLabel">Agregar Beneficiario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addBeneficiaryForm" method="post" asp-controller="Beneficiary" asp-action="Create">
+                    <div class="mb-3">
+                        <label for="AccountNumberBeneficiary" class="form-label">Número de Cuenta</label>
+                        <input type="text" class="form-control" id="AccountNumberBeneficiary" name="AccountNumberBeneficiary" required />
+                        <span class="text-danger d-none" id="accountErrorMessage">El número de cuenta no existe.</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmacion para eliminar -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este beneficiario?
+            </div>
+            <div class="modal-footer">
+                <form method="post" asp-controller="Beneficiary" asp-action="Delete">
+                    <input type="hidden" name="id" id="deleteBeneficiaryId" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Manejar el modal de confirmacion de eliminacion
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var id = button.getAttribute('data-id');
+                document.getElementById("deleteBeneficiaryId").value = id;
+            });
+
+            // Validacion antes de enviar el formulario de agregar beneficiario
+            document.getElementById("addBeneficiaryForm").addEventListener("submit", function (event) {
+                var accountNumber = document.getElementById("AccountNumberBeneficiary").value.trim();
+                if (accountNumber.length !== 9) {
+                    document.getElementById("accountErrorMessage").classList.remove("d-none");
+                    event.preventDefault(); 
+                }
+            });
+        });
+    </script>
+}

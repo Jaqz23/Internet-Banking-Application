@@ -1,0 +1,35 @@
+﻿@using IB.Core.Application.ViewModels.Transaction
+@model ConfirmTransactionViewModel
+
+@{
+    ViewData["Title"] = "Confirmar Pago a Beneficiario";
+}
+
+<div class="container mt-5 w-50">
+    <div class="card card-box-shadow">
+        <div class="card-header bg-white">
+            <h3>✅ Confirmar Pago a Beneficiario</h3>
+        </div>
+        <div class="card-body">
+            <p class="fs-5 text-center">Revisa los detalles antes de confirmar.</p>
+            <ul class="list-group mb-3">
+                <li class="list-group-item"><strong>Desde:</strong> @Model.FromAccountNumber</li>
+                <li class="list-group-item"><strong>Hacia:</strong> @Model.ToAccountNumber</li>
+                <li class="list-group-item"><strong>Beneficiario:</strong> @Model.RecipientName</li>
+                <li class="list-group-item"><strong>Monto:</strong> @string.Format("{0:C}", Model.Amount)</li>
+            </ul>
+
+            <form method="post" asp-controller="Transaction" asp-action="ConfirmBeneficiaryPayment">
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="FromAccountNumber" />
+                <input type="hidden" asp-for="ToAccountNumber" />
+                <input type="hidden" asp-for="RecipientName" />
+                <input type="hidden" asp-for="Amount" />
+                <input type="hidden" asp-for="BeneficiaryId" />
+
+                <button type="submit" class="btn btn-success">✅ Confirmar</button>
+                <a class="btn btn-danger" asp-controller="Transaction" asp-action="CancelPaymentBeneficiary">❌ Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

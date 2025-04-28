@@ -1,0 +1,130 @@
+﻿@using IB.Core.Application.ViewModels.Product;
+@model List<ProductsViewModel>
+@{
+    ViewData["Title"] = "Productos del Cliente";
+    var userId = ViewBag.UserId;
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Productos Asignados</h1>
+
+    <a asp-controller="Product" asp-action="Create" asp-route-userId="@userId" class="btn btn-primary m-3">
+        <i class="bi bi-plus-circle-fill"></i> Crear Producto
+    </a>
+
+    <div class="border rounded-3 card-box-shadow bg-white p-4">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <table class="table table-hover">
+            <thead class="fw-bold fs-6">
+                <tr>
+                    <th class="text-center">Número de Cuenta</th>
+                    <th class="text-center">Nombre del Cliente</th>
+                    <th class="text-center">Tipo de Producto</th>
+                    <th class="text-center">Saldo</th>
+                    <th class="text-center">Deuda</th>
+                    <th class="text-center">Principal</th>
+                    <th class="text-center">Opciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                @foreach (var product in Model)
+                {
+                    <tr class="align-middle">
+                        <td class="py-3 text-center">@product.AccountNumber</td>
+                        <td class="py-3 text-center">@product.UserName</td>
+                        <td class="py-3 text-center">
+                            @switch (product.ProductType)
+                            {
+                                case "Cuenta de Ahorro":
+                                    <span class="badge bg-success">Cuenta de Ahorro</span>
+                                    break;
+                                case "Tarjeta de Crédito":
+                                    <span class="badge bg-primary">Tarjeta de Crédito</span>
+                                    break;
+                                case "Préstamo":
+                                    <span class="badge bg-warning">Préstamo</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">Desconocido</span>
+                                    break;
+                            }
+                        </td>
+                        <td class="py-3 text-center">@string.Format("{0:C}", product.Balance)</td>
+                        <td class="py-3 text-center">
+                            @(product.ProductType == "Cuenta de ahorro" ? "—" : string.Format("{0:C}", product.Debt))
+                        </td>
+                        <td class="py-3 text-center">
+                            @(product.IsPrimary ? "✅" : "❌")
+                        </td>
+                        <td class="py-3 text-center">
+                            @if (!product.IsPrimary)
+                            {
+                                if (product.Debt > 0)
+                                {
+                                    <button class="btn btn-danger btn-sm disabled" disabled>
+                                        <i class="bi bi-trash-fill"></i> Eliminar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <!-- Botón para abrir el modal de confirmación -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                            data-id="@product.Id" data-producttype="@product.ProductType">
+                                        <i class="bi bi-trash-fill"></i> Eliminar
+                                    </button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este producto?
+            </div>
+            <div class="modal-footer">
+                <form method="post" asp-controller="Product" asp-action="Delete">
+                    <input type="hidden" name="id" id="deleteProductId" />
+                    <input type="hidden" name="productType" id="deleteProductType" />
+                    <input type="hidden" name="userId" value="@ViewBag.UserId" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var id = button.getAttribute('data-id');
+                var productType = button.getAttribute('data-producttype');
+
+                document.getElementById("deleteProductId").value = id;
+                document.getElementById("deleteProductType").value = productType;
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Internet_banking</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IB.Core.Application\IB.Core.Application.csproj" />
+    <ProjectReference Include="..\IB.Core.Domain\IB.Core.Domain.csproj" />
+    <ProjectReference Include="..\IB.Infrastructure.Identity\IB.Infrastructure.Identity.csproj" />
+    <ProjectReference Include="..\IB.Infrastructure.Persistence\IB.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\IB.Infrastructure.Shared\IB.Infrastructure.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

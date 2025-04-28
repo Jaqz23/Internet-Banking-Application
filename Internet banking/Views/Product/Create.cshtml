@@ -1,0 +1,83 @@
+﻿@using IB.Core.Application.ViewModels.Product
+@model SaveProductViewModel
+
+@{
+    ViewData["Title"] = "Agregar Producto";
+    var userId = ViewBag.UserId;
+}
+
+<div class="container mt-5 w-50">
+    <div class="card card-box-shadow">
+        <div class="card-header bg-white">
+            <h3>Agregar Producto</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.HasError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p>@Model.Error</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form method="post" asp-controller="Product" asp-action="Create" asp-route-userId="@userId">
+                <input type="hidden" asp-for="UserId" />
+
+                <!-- Selección de tipo de producto -->
+                <div class="mb-3">
+                    <label asp-for="ProductType" class="form-label">Tipo de Producto</label>
+                    <select asp-for="ProductType" class="form-select" id="productTypeDropdown">
+                        <option value="SavingAccount">Cuenta de Ahorro</option>
+                        <option value="CreditCard">Tarjeta de Crédito</option>
+                        <option value="Loan">Préstamo</option>
+                    </select>
+                    <span asp-validation-for="ProductType" class="text-danger"></span>
+                </div>
+
+                <!-- Saldo inicial para cuentas de ahorro -->
+                <div class="mb-3" id="balanceDiv">
+                    <label asp-for="Balance" class="form-label">Saldo Inicial</label>
+                    <input type="number" asp-for="Balance" class="form-control" />
+                    <span asp-validation-for="Balance" class="text-danger"></span>
+                </div>
+
+                <!-- Límite de crédito para tarjetas de crédito -->
+                <div class="mb-3" id="creditLimitDiv" style="display: none;">
+                    <label asp-for="CreditLimit" class="form-label">Límite de Crédito</label>
+                    <input type="number" asp-for="CreditLimit" class="form-control" />
+                    <span asp-validation-for="CreditLimit" class="text-danger"></span>
+                </div>
+
+                <!-- Monto del préstamo -->
+                <div class="mb-3" id="loanAmountDiv" style="display: none;">
+                    <label asp-for="Amount" class="form-label">Monto del Préstamo</label>
+                    <input type="number" asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a class="btn btn-secondary" asp-action="Index" asp-route-userId="@Model.UserId">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            $('#productTypeDropdown').change(function () {
+                var selectedType = $(this).val();
+                $('#balanceDiv').toggle(selectedType === 'SavingAccount');
+                $('#creditLimitDiv').toggle(selectedType === 'CreditCard');
+                $('#loanAmountDiv').toggle(selectedType === 'Loan');
+            });
+
+            // Ejecutar al cargar la página para mostrar el campo correcto según el valor inicial
+            $('#productTypeDropdown').trigger('change');
+        });
+    </script>
+}

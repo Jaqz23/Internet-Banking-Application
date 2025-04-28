@@ -1,0 +1,39 @@
+﻿@using IB.Core.Application.ViewModels.User
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card card-box-shadow w-50">
+        <div class="card-body">
+            <h1 class="text-center">Iniciar Sesión</h1>
+
+            @if (Model.HasError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p>@Model.Error</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form method="post" asp-controller="Auth" asp-action="Login" class="mx-auto">
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label"></label>
+                    <input type="text" asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input type="password" asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="text-center pt-3 mb-3">
+                    <button class="btn btn-primary w-100">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

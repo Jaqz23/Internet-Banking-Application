@@ -1,0 +1,73 @@
+﻿@using IB.Core.Application.Enums
+@using IB.Core.Application.ViewModels.SavingsAccount
+@using IB.Core.Application.ViewModels.User;
+@using IB.Core.Application.ViewModels.CreditCard
+@using IB.Core.Application.ViewModels.Loan
+@model List<object>
+
+@{
+    ViewData["Title"] = "Mis Productos";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h1 class="fw-bold text-primary">🏦 Mis Productos Financieros</h1>
+            <hr class="w-50 mx-auto border-dark-subtle">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="border rounded-3 shadow bg-white p-4">
+                <table class="table table-hover">
+                    <thead class="fw-bold text-center">
+                        <tr>
+                            <th>Número de Cuenta</th>
+                            <th>💰 Saldo Disponible</th>
+                            <th>💳 Deuda</th>
+                            <th>Tipo</th>
+                            <th>Principal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider text-center">
+                        @foreach (var product in Model)
+                        {
+                            if (product is SavingsAccountViewModel savings)
+                            {
+                                <tr class="align-middle">
+                                    <td>@savings.AccountNumber</td>
+                                    <td>@string.Format("{0:C}", savings.Balance)</td>
+                                    <td>—</td>
+                                    <td><span class="badge bg-success">Cuenta de Ahorro</span></td>
+                                    <td>@(savings.IsPrimary ? "✅" : "❌")</td>
+                                </tr>
+                            }
+                            else if (product is CreditCardViewModel creditCard)
+                            {
+                                var availableBalance = creditCard.CreditLimit - creditCard.Debt;
+                                <tr class="align-middle">
+                                    <td>@creditCard.CardNumber</td>
+                                    <td>@string.Format("{0:C}", availableBalance)</td>
+                                    <td>@string.Format("{0:C}", creditCard.Debt)</td>
+                                    <td><span class="badge bg-warning">Tarjeta de Crédito</span></td>
+                                    <td>—</td>
+                                </tr>
+                            }
+                            else if (product is LoanViewModel loan)
+                            {
+                                <tr class="align-middle">
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>@string.Format("{0:C}", loan.RemainingBalance)</td>
+                                    <td><span class="badge bg-danger">Préstamo</span></td>
+                                    <td>—</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

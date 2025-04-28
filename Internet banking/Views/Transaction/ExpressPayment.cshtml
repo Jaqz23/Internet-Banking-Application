@@ -1,0 +1,82 @@
+﻿@using IB.Core.Application.ViewModels.Transaction
+@using IB.Core.Application.ViewModels.SavingsAccount
+@model SaveTransactionViewModel
+
+@{
+    ViewData["Title"] = "Pago Expreso";
+    var userAccounts = ViewBag.UserAccounts as List<SavingsAccountViewModel>;
+}
+
+<div class="container mt-5 w-50">
+    <div class="card card-box-shadow">
+        <div class="card-header bg-white">
+            <h3>💸 Pago Expreso</h3>
+        </div>
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p>@TempData["ErrorMessage"]</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form method="post" asp-controller="Transaction" asp-action="ExpressPayment">
+                <input type="hidden" asp-for="UserId" />
+
+                <!-- Número de Cuenta Destino -->
+                <div class="mb-3">
+                    <label asp-for="ToAccountNumber" class="form-label">Número de Cuenta Destino</label>
+                    <input type="text" asp-for="ToAccountNumber" class="form-control" maxlength="9" required />
+                    <span asp-validation-for="ToAccountNumber" class="text-danger"></span>
+                </div>
+
+                <!-- Cuenta de Origen -->
+                <div class="mb-3">
+                    <label asp-for="SavingsAccountId" class="form-label">Cuenta de Origen</label>
+                    <select asp-for="SavingsAccountId" class="form-select" required>
+                        <option value="">Seleccione una cuenta</option>
+                        @if (userAccounts != null)
+                        {
+                            @foreach (var account in userAccounts)
+                            {
+                                <option value="@account.Id">Cuenta: @account.AccountNumber - Saldo: @string.Format("{0:C}", account.Balance)</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="SavingsAccountId" class="text-danger"></span>
+                </div>
+
+                <!-- Monto a Pagar -->
+                <div class="mb-3">
+                    <label asp-for="Amount" class="form-label">Monto a Pagar</label>
+                    <input type="number" asp-for="Amount" class="form-control" step="0.01" min="0.01" required />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-primary">Continuar</button>
+                    <a class="btn btn-secondary" asp-controller="Home" asp-action="Client">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const amountInput = document.getElementById("Amount");
+            const form = document.querySelector("form");
+
+            form.addEventListener("submit", function (event) {
+                if (amountInput.value <= 0) {
+                    event.preventDefault();
+                    alert("El monto debe ser mayor a 0.");
+                }
+            });
+        });
+    </script>
+}

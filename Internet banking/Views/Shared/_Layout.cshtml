@@ -1,0 +1,91 @@
+﻿@using IB.Core.Application.ViewModels.User
+@using IB.Core.Application.Dtos.Account
+@using IB.Core.Application.Helpers
+@using IB.Core.Application.Enums
+@inject IHttpContextAccessor httpContextAccessor
+
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null ? User.Roles.Any(r => r == Roles.Admin.ToString()) : false;
+    var isClient = User != null ? User.Roles.Any(r => r == Roles.Client.ToString()) : false;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - InternetBanking</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white" style="width: 280px; height: 100vh; position: fixed;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
+                <span class="fs-4">🏦 Internet Banking</span>
+            </a>
+            <hr>
+
+            @if (User != null)
+            {
+                <!-- Opciones del menú -->
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <p class="text-center">Bienvenido, <strong>@User.UserName</strong></p>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Home" asp-action="Index">🏠 Home</a>
+                    </li>
+
+                    @if (isAdmin)
+                    {
+                        <li>
+                            <a class="nav-link text-white" asp-controller="User" asp-action="Index">👤 Gestión de Usuarios</a>
+                        </li>
+                    }
+                    else if (isClient)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                💳 Pagos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Transaction" asp-action="ExpressPayment">Expreso</a></li>
+                                <li><a class="dropdown-item" asp-controller="Transaction" asp-action="CreditCardPayment">Tarjeta de crédito</a></li>
+                                <li><a class="dropdown-item" asp-controller="Transaction" asp-action="LoanPayment">Préstamo</a></li>
+                                <li><a class="dropdown-item" asp-controller="Transaction" asp-action="BeneficiaryPayment">Beneficiarios</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="nav-link text-white" asp-controller="Beneficiary" asp-action="Index">🏦 Beneficiarios</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-white" asp-controller="Transaction" asp-action="CashAdvance">💵 Avance de efectivo</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-white" asp-controller="Transaction" asp-action="InternalTransfer">🔄 Transferencias</a>
+                        </li>
+                    }
+                </ul>
+
+                <!-- Bienvenida y Cerrar sesión -->
+                <div class="mt-auto">
+                    <a asp-controller="Auth" asp-action="LogOut" class="btn btn-danger w-100">Cerrar sesión</a>
+                </div>
+            }
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="container-fluid" style="margin-left: 300px; padding-top: 20px;">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

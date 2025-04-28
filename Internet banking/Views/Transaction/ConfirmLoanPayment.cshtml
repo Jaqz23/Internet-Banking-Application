@@ -1,0 +1,31 @@
+﻿@using IB.Core.Application.ViewModels.Transaction
+@model ConfirmTransactionViewModel
+
+@{
+    ViewData["Title"] = "Confirmar Pago de Préstamo";
+}
+
+<div class="container mt-5 w-50">
+    <div class="card card-box-shadow">
+        <div class="card-header bg-white">
+            <h3>🏦 Confirmar Pago de Préstamo</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group mb-3">
+                <li class="list-group-item"><strong>Cuenta de Origen:</strong> @Model.FromAccountNumber</li>
+                <li class="list-group-item"><strong>Préstamo ID:</strong> @Model.ToAccountNumber</li>
+                <li class="list-group-item"><strong>Monto a Pagar:</strong> @string.Format("{0:C}", Model.Amount)</li>
+            </ul>
+
+            <form method="post" asp-controller="Transaction" asp-action="ConfirmLoanPayment">
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="FromAccountNumber" />
+                <input type="hidden" asp-for="ToAccountNumber" />
+                <input type="hidden" asp-for="Amount" />
+
+                <button type="submit" class="btn btn-success">✅ Confirmar Pago</button>
+                <a class="btn btn-danger" asp-controller="Transaction" asp-action="CancelLoanPayment">❌ Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
